@@ -1,0 +1,127 @@
+import groovy.io.FileType
+import groovy.json.JsonSlurper
+
+buildscript {
+    ext {
+        springBootVersion = '2.0.6.RELEASE'
+        springCloudVersion = 'Finchley.SR1'
+        springCloudContractVerifier = '2.0.1.RELEASE'
+    }
+    repositories {
+        jcenter()
+        maven { url "http://repo.spring.io/snapshot" }
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url "http://repo.spring.io/release" }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:${springCloudContractVerifier}"
+    }
+}
+
+plugins {
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    id "com.github.ben-manes.versions" version "0.20.0"
+    id "com.cinnober.gradle.semver-git" version "2.3.1"
+    id 'maven-publish'
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'spring-cloud-contract'
+apply plugin: 'jacoco'
+
+group = "${gradle.projectGroup}"
+// version info is set by versioning plugin depending on your git tags,
+// see https://plugins.gradle.org/plugin/com.cinnober.gradle.semver-git
+//version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 10
+
+//def checkPropertyExists(String property) {
+//    if (!project.hasProperty(property)) {
+//        throw new GradleException("Property '" + property + "' does not exist. Please check your gradle.properties-file.")
+//    }
+//}
+//["mavenRepositoryUsername","mavenRepositoryPassword","mavenSnapshotsRepositoryUrl","mavenReleasesRepositoryUrl",
+// "sonarqubeHost","sonarqubeLogin","consumerDrivenContractTestingEnabled"].each {
+//    checkPropertyExists(it)
+//}
+
+println "-------------------------------------------------------------"
+println "Project   : ${name}"
+println "Group     : ${group}"
+println "Version   : ${version}"
+println "-------------------------------------------------------------"
+
+repositories {
+    jcenter()
+    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://repo.spring.io/milestone" }
+    maven { url "http://repo.spring.io/release" }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-contract-dependencies:${springCloudContractVerifier}"
+    }
+}
+
+configurations {
+    testCompile.exclude group: 'junit', module: 'junit'
+}
+
+dependencies {
+
+    // compiletime dependencies
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+    compile 'org.springframework.cloud:spring-cloud-stream'
+    compile 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
+    compile 'javax.xml.bind:jaxb-api'
+    compile 'io.springfox:springfox-swagger2:2.9.2'
+    compile 'io.springfox:springfox-swagger-ui:2.9.2'
+    compile 'org.json:json:20180813'
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    compile 'org.hashids:hashids:1.0.3'
+
+    // runtime dependencies
+    runtime 'org.springframework.boot:spring-boot-devtools'
+    runtime 'com.h2database:h2'
+//    runtime 'mysql:mysql-connector-java'
+
+    // dependencies for test-execution
+    testCompile 'org.assertj:assertj-core:3.10.0'
+    testCompile 'io.rest-assured:rest-assured:3.1.0'
+    testCompile 'io.rest-assured:json-schema-validator:3.1.0'
+    testCompile 'io.rest-assured:spring-mock-mvc:3.1.0'
+    testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    testCompile 'com.tngtech.archunit:archunit-junit5-api:0.9.1'
+    testRuntime 'com.tngtech.archunit:archunit-junit5-engine:0.9.1'
+    testCompile 'mysql:mysql-connector-java'
+    testCompile 'org.springframework.cloud:spring-cloud-stream-test-support'
+    testCompile 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
+    testCompile 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
+}
+
+bootRun {
+    if (project.hasProperty("profile")) {
+        args += ["--spring.profiles.active=${project.profile}"]
+    }
+    if (project.hasProperty("port")) {
+        args += ["--server.port=${project.port}"]
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10.2'
+}
