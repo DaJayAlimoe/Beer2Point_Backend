@@ -18,7 +18,9 @@ gradlew bootRun
 to build this application(windows):
 gradlew clean build
 
-call SwaggerApi
+(for Linux,max "./gradle ...")
+
+call SwaggerApi:
 http://localhost:443/swagger-ui.html#/
 
 call h2-Database:
