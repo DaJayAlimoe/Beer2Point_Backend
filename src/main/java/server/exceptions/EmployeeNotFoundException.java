@@ -8,11 +8,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class EmployeeNotFoundException extends Exception {
 
-    private final Long employeeId;
+    private final String employeeToken;
 
     public EmployeeNotFoundException(Long employeeId) {
-        super(String.format("Could not find customer with numer %d.", employeeId));
+        super(String.format("Could not find employee with number %d.", employeeId));
 
-        this.employeeId = employeeId;
+        this.employeeToken = employeeId.toString();
+    }
+
+    public EmployeeNotFoundException(String employeetoken) {
+        super(String.format("Could not find employee with token %s.", employeetoken));
+
+        this.employeeToken = employeetoken;
     }
 }

@@ -4,13 +4,13 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import server.domain.datatypes.Item;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import server.domain.datatypes.OrderStatus;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -24,14 +24,11 @@ public class Booking {
     @Setter(AccessLevel.PRIVATE)
     private final Date createdOn = new Date();
 
-    private Item itemName;
-
     @Setter(AccessLevel.NONE)
     private OrderStatus orderStatus = OrderStatus.PREORDERED;
 
+    @Size(min = 1, max = 5)
     private int amount;
-
-    private String seat;
 
     // versioncontroll and config for DB
     @Version
@@ -39,19 +36,28 @@ public class Booking {
 
     private Date lastUpdatedOn;
 
-    public Booking(Item itemName, int amount, String seat) {
-        this.itemName = itemName;
-        this.amount = amount;
-        this.seat = seat;
-        this.lastUpdatedOn = new Date();
-    }
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "employee_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = false)
     @Setter(AccessLevel.NONE)
-    @Embedded
     private Employee employee;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "seat_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Seat seat;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "item_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Setter(AccessLevel.NONE)
+    private Item item;
+
+    public Booking(@Size(min = 1, max = 5) int amount, Seat seat, Item item) {
+        this.amount = amount;
+        this.seat = seat;
+        this.item = item;
+        this.lastUpdatedOn = new Date();
+    }
 
     public void updateOrderStatus(OrderStatus newStatus) {
         orderStatus = orderStatus.transition(newStatus);

@@ -5,25 +5,20 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import server.domain.entities.Item;
+import org.springframework.http.HttpStatus;
+import server.domain.entities.Booking;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class BookingCreateDTO {
+public class BookingListDTO {
 
-    @ApiModelProperty(required = true)
     @NotNull
-    private Long item_id;
+    private String token;
 
-    @ApiModelProperty(required = true)
-    private int amount;
-
-    @ApiModelProperty(required = true)
-    @NotNull
-    private Long seat_id;
-
+    private List<Booking> bookingList;
 }

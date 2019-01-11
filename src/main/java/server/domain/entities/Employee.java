@@ -22,23 +22,22 @@ public class Employee {
     private Long id;
 
     @ApiModelProperty(required = true)
-    private String lastName;
-
-    @ApiModelProperty(required = true)
-    private String qrKey;
+    private String name;
 
     @ApiModelProperty
     private Date validTimeStamp;
 
-    public Employee(String lastName, String qrKey) {
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "qrtoken_id", nullable = false)
+    private Qrtoken qrtoken;
+
+    public Employee(String lastName) {
         this.validTimeStamp = new Date();
-        this.lastName = lastName;
-        this.qrKey = qrKey;
+        this.name = lastName;
     }
 
     public static Employee of(EmployeeCreateDTO employeeCreateDTO) {
         return new Employee(
-                employeeCreateDTO.getLastName(),
-                employeeCreateDTO.getQrKey());
+                employeeCreateDTO.getLastName());
     }
 }

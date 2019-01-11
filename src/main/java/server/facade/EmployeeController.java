@@ -21,23 +21,20 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/v1/employee")
-@Api(value = "/v1/employee", tags = "Employees")
+@RequestMapping(path = "/v1/Employee")
+@Api(value = "/v1/Employee", tags = "Employees")
 public class EmployeeController {
 
     private final LogicalService logicalService;
 
     private final EmployeeRepository employeeRepository;
 
-    private final BookingRepository bookingRepository;
-
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    public EmployeeController(LogicalService logicalService, EmployeeRepository employeeRepository, BookingRepository bookingRepository) {
+    public EmployeeController(LogicalService logicalService, EmployeeRepository employeeRepository) {
         this.logicalService = logicalService;
         this.employeeRepository = employeeRepository;
-        this.bookingRepository = bookingRepository;
     }
 
     // Get all employees
@@ -46,7 +43,7 @@ public class EmployeeController {
             @ApiResponse(code = 200, message = "Successfully retrieved employees"),
     })
     @GetMapping
-    public List<Employee> getCustomers() {
+    public List<Employee> getEmployees() {
         return logicalService.getEmployees();
     }
 
@@ -77,7 +74,7 @@ public class EmployeeController {
     }
 
     // create a Employee by DTO object
-    @ApiOperation(value = "Create a customer")
+    @ApiOperation(value = "Create a employee")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successfully created customer"),
     })

@@ -3,7 +3,6 @@ package server.exceptions;
 import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import server.domain.datatypes.Item;
 
 @Value
 @ResponseStatus(HttpStatus.NOT_FOUND)

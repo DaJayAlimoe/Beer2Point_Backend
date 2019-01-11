@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.domain.datatypes.OrderStatus;
+import server.domain.dtos.BookingCreateDTO;
 import server.domain.dtos.EmployeeCreateDTO;
 import server.domain.dtos.IdDTO;
-import server.domain.entities.Booking;
-import server.domain.entities.Employee;
-import server.domain.repositories.BookingRepository;
-import server.domain.repositories.EmployeeRepository;
+import server.domain.entities.*;
+import server.domain.repositories.*;
 import server.exceptions.*;
 
 import java.util.List;
@@ -22,10 +21,19 @@ public class LogicalService {
 
     private final BookingRepository bookingRepository;
 
-    @Autowired
-    public LogicalService(EmployeeRepository employeeRepository, BookingRepository bookingRepository) {  // cyclic dependency resolution; see http://www.baeldung.com/circular-dependencies-in-spring
+    private final ItemRepository itemRepository;
+
+    private final SeatRepository seatRepository;
+
+    private final QrtokenRepository qrtokenRepository;
+
+    @Autowired // cyclic dependency resolution; see http://www.baeldung.com/circular-dependencies-in-spring
+    public LogicalService(EmployeeRepository employeeRepository, BookingRepository bookingRepository, ItemRepository itemRepository, SeatRepository seatRepository, QrtokenRepository qrtokenRepository) {
         this.employeeRepository = employeeRepository;
         this.bookingRepository = bookingRepository;
+        this.itemRepository = itemRepository;
+        this.seatRepository = seatRepository;
+        this.qrtokenRepository = qrtokenRepository;
     }
 
     //++++++++++++++++++++++++++for Employees++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -69,7 +77,7 @@ public class LogicalService {
 
     // update Order status
     @Transactional(rollbackFor = {BookingNotFoundException.class, BookingAlreadyConfirmedException.class})
-    public void confirmOrder(Long orderID) throws BookingAlreadyConfirmedException, BookingNotFoundException {
+    public void confirmBooking(Long orderID) throws BookingAlreadyConfirmedException, BookingNotFoundException {
         Booking booking = bookingRepository
                 .findById(orderID)
                 .orElseThrow(() -> new BookingNotFoundException(orderID));
@@ -84,7 +92,7 @@ public class LogicalService {
 
     // add employee to an order. Just if the Service wor on order -> change status to ONTHEWAY
     @Transactional(rollbackFor = {BookingNotFoundException.class, EmployeeNotFoundException.class, BookingAlreadyOnTheWayException.class})
-    public Booking addEmployeeToOrder(Long employeeId, Long orderId) throws BookingNotFoundException, EmployeeNotFoundException, BookingAlreadyOnTheWayException {
+    public Booking addEmployeeToBooking(Long employeeId, Long orderId) throws BookingNotFoundException, EmployeeNotFoundException, BookingAlreadyOnTheWayException {
         Booking booking = bookingRepository
                 .findById(orderId)
                 .orElseThrow(() -> new BookingNotFoundException(orderId));
@@ -100,5 +108,43 @@ public class LogicalService {
         booking.updateOrderStatus(OrderStatus.ONTHEWAY);
         booking.addEmployee(employee);
         return bookingRepository.save(booking);
+    }
+
+    @Transactional(rollbackFor = {ItemNotFoundException.class, SeatNotFoundException.class})
+    public Booking createBooking(BookingCreateDTO bookingCreateDTO) throws ItemNotFoundException, SeatNotFoundException {
+        Long itemID = bookingCreateDTO.getItem_id();
+        Long seatID = bookingCreateDTO.getSeat_id();
+
+        Item item = itemRepository
+                .findById(itemID)
+                .orElseThrow(() -> new ItemNotFoundException(itemID));
+        Seat seat = seatRepository
+                .findById(seatID)
+                .orElseThrow(() -> new SeatNotFoundException(seatID));
+
+        Booking booking = new Booking(bookingCreateDTO.getAmount(), seat, item);
+        return bookingRepository.save(booking);
+    }
+
+    public String isValidToken(String token) {
+        return token;
+    }
+
+    @Transactional(rollbackFor = {AuthentificationException.class})
+    public Object authentificate(String qrToken) throws AuthentificationException {
+        Optional<Employee> employee = employeeRepository.findByQrtoken(qrToken);
+        Optional<Seat> seat = seatRepository.findByQrtoken(qrToken);
+
+        if(employee.isPresent()){
+            return employee;
+        }
+        else if(seat.isPresent()){
+            return seat;
+        }else
+            throw new AuthentificationException(qrToken);
+    }
+
+    public String getToken(Qrtoken qrtoken) {
+        return qrtoken.getToken();
     }
 }

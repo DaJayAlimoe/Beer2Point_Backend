@@ -5,25 +5,21 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import server.domain.entities.Item;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class BookingCreateDTO {
+public class TakeBookingDTO {
 
     @ApiModelProperty(required = true)
     @NotNull
-    private Long item_id;
-
-    @ApiModelProperty(required = true)
-    private int amount;
+    private Long booking_id;
 
     @ApiModelProperty(required = true)
     @NotNull
-    private Long seat_id;
+    private Long employee_id;
 
 }

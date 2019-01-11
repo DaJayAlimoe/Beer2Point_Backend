@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import server.domain.datatypes.Item;
 import server.domain.entities.Booking;
 import server.domain.entities.Employee;
 import server.domain.repositories.EmployeeRepository;
@@ -73,16 +72,26 @@ class PopulateTestDataRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
 //        employeeRepository.deleteAll();
 //        orderRepository.deleteAll();
         // edit here to fill Data in h2 at the start
-        Employee employee = new Employee("MitarbeiterTest", "qr1234");
-        employeeRepository.save(employee);
+//        Employee employee = new Employee("MitarbeiterTest", "qr1234");
+//        employeeRepository.save(employee);
+//
+//        // Order(Item itemName, int amount, String seat)
+//        Booking order = new Booking(Item.BIER, 5, "A:5");
+//        order.addEmployee(employee);
+//        bookingRepository.save(order);
 
-        // Order(Item itemName, int amount, String seat)
-        Booking order = new Booking(Item.BIER, 5, "A:5");
-        order.addEmployee(employee);
-        bookingRepository.save(order);
+        // Set child reference(userProfile) in parent entity(user)
+        //user.setUserProfile(userProfile);
+
+        // Set parent reference(user) in child entity(userProfile)
+        //userProfile.setUser(user);
+
+        // Save Parent Reference (which will save the child as well)
+        //userRepository.save(user);
 
     }
 }
