@@ -3,7 +3,8 @@ package server.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import server.domain.datatypes.OrderStatus;
+import server.domain.datatypes.BookingStatus;
+import server.domain.dtos.AuthEmplSeatDTO;
 import server.domain.dtos.BookingCreateDTO;
 import server.domain.dtos.EmployeeCreateDTO;
 import server.domain.dtos.IdDTO;
@@ -11,6 +12,7 @@ import server.domain.entities.*;
 import server.domain.repositories.*;
 import server.exceptions.*;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,75 +78,95 @@ public class LogicalService {
 
 
     // update Order status
-    @Transactional(rollbackFor = {BookingNotFoundException.class, BookingAlreadyConfirmedException.class})
-    public void confirmBooking(Long orderID) throws BookingAlreadyConfirmedException, BookingNotFoundException {
+    @Transactional(rollbackFor = {BookingNotFoundException.class, BookingAlreadyConfirmedException.class,EmployeeTokenWrongException.class})
+    public void confirmBooking(Long orderID, String token) throws BookingAlreadyConfirmedException, BookingNotFoundException, EmployeeTokenWrongException {
+
+        Optional<Booking> optionalBooking = bookingRepository.findByEmployee_QrtokenToken(token);
+
+        if(!optionalBooking.isPresent())
+            throw new EmployeeTokenWrongException(token);
+
         Booking booking = bookingRepository
                 .findById(orderID)
                 .orElseThrow(() -> new BookingNotFoundException(orderID));
 
-        if (booking.getOrderStatus() == OrderStatus.CLOSED) {
+        if (booking.getStatus() == BookingStatus.CLOSED) {
             throw new BookingAlreadyConfirmedException(orderID);
         }
 
-        booking.updateOrderStatus(OrderStatus.CLOSED);
+        booking.updateOrderStatus(BookingStatus.CLOSED);
         bookingRepository.save(booking);
     }
 
-    // add employee to an order. Just if the Service wor on order -> change status to ONTHEWAY
-    @Transactional(rollbackFor = {BookingNotFoundException.class, EmployeeNotFoundException.class, BookingAlreadyOnTheWayException.class})
-    public Booking addEmployeeToBooking(Long employeeId, Long orderId) throws BookingNotFoundException, EmployeeNotFoundException, BookingAlreadyOnTheWayException {
+    // add employee to an order -> change status to ONTHEWAY
+    @Transactional(rollbackFor = {BookingNotFoundException.class, BookingAlreadyOnTheWayException.class})
+    public Booking addEmployeeToBooking(Employee employee, Long orderId) throws BookingNotFoundException, BookingAlreadyOnTheWayException {
         Booking booking = bookingRepository
                 .findById(orderId)
                 .orElseThrow(() -> new BookingNotFoundException(orderId));
 
-        Employee employee = employeeRepository
-                .findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
-
-        if (booking.getOrderStatus() == OrderStatus.ONTHEWAY) {
+        if (booking.getStatus() == BookingStatus.ONTHEWAY) {
             throw new BookingAlreadyOnTheWayException(orderId);
         }
 
-        booking.updateOrderStatus(OrderStatus.ONTHEWAY);
+        booking.updateOrderStatus(BookingStatus.ONTHEWAY);
         booking.addEmployee(employee);
         return bookingRepository.save(booking);
     }
 
-    @Transactional(rollbackFor = {ItemNotFoundException.class, SeatNotFoundException.class})
-    public Booking createBooking(BookingCreateDTO bookingCreateDTO) throws ItemNotFoundException, SeatNotFoundException {
-        Long itemID = bookingCreateDTO.getItem_id();
-        Long seatID = bookingCreateDTO.getSeat_id();
+    @Transactional(rollbackFor = {ItemNotFoundException.class})
+    public Booking createBooking(Long item_id, Seat seat, int amount) throws ItemNotFoundException {
 
         Item item = itemRepository
-                .findById(itemID)
-                .orElseThrow(() -> new ItemNotFoundException(itemID));
-        Seat seat = seatRepository
-                .findById(seatID)
-                .orElseThrow(() -> new SeatNotFoundException(seatID));
+                .findById(item_id)
+                .orElseThrow(() -> new ItemNotFoundException(item_id));
 
-        Booking booking = new Booking(bookingCreateDTO.getAmount(), seat, item);
+        Booking booking = new Booking(amount, seat, item);
         return bookingRepository.save(booking);
     }
 
-    public String isValidToken(String token) {
-        return token;
-    }
+    @Transactional(readOnly = true)
+    public AuthEmplSeatDTO authenticate(String qrToken) throws TokenAuthenticationException {
 
-    @Transactional(rollbackFor = {AuthentificationException.class})
-    public Object authentificate(String qrToken) throws AuthentificationException {
-        Optional<Employee> employee = employeeRepository.findByQrtoken(qrToken);
-        Optional<Seat> seat = seatRepository.findByQrtoken(qrToken);
+        Optional<Qrtoken> optionalQrtoken = qrtokenRepository.findByToken(qrToken);
 
-        if(employee.isPresent()){
-            return employee;
+        if(!optionalQrtoken.isPresent())
+            throw new TokenAuthenticationException(qrToken);
+
+        if(optionalQrtoken.get().getEmployee() != null) {
+            return new AuthEmplSeatDTO(optionalQrtoken.get().getEmployee());
         }
-        else if(seat.isPresent()){
-            return seat;
-        }else
-            throw new AuthentificationException(qrToken);
+        else
+            return new AuthEmplSeatDTO(optionalQrtoken.get().getSeat());
     }
 
-    public String getToken(Qrtoken qrtoken) {
-        return qrtoken.getToken();
+
+
+    @Transactional(readOnly = true)
+    public Qrtoken isValidToken(String token) throws TokenAuthenticationException {
+
+        Optional<Qrtoken> optionalQrtoken = qrtokenRepository.findByToken(token);
+
+        if(!optionalQrtoken.isPresent())
+            throw new TokenAuthenticationException(token);
+
+        return optionalQrtoken.get();
     }
+
+    @Transactional(readOnly = true)
+    public void isValidEmployee(String token) throws EmployeeTokenWrongException {
+        Optional<Employee> optionalEmployee = employeeRepository.findByQrtokenToken(token);
+
+        if(!optionalEmployee.isPresent())
+            throw new EmployeeTokenWrongException(token);
+    }
+
+    @Transactional(readOnly = true)
+    public void isValidSeat(String token) throws SeatTokenWrongException {
+        Optional<Seat> optionalSeat = seatRepository.findByQrtokenToken(token);
+
+        if(!optionalSeat.isPresent())
+            throw new SeatTokenWrongException(token);
+    }
+
 }

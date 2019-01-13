@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import server.domain.entities.Booking;
-import server.domain.entities.Employee;
-import server.domain.repositories.EmployeeRepository;
-import server.domain.repositories.BookingRepository;
+import server.domain.datatypes.TokenGenerator;
+import server.domain.dtos.BookingCreateDTO;
+import server.domain.entities.*;
+import server.domain.repositories.*;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -70,28 +70,45 @@ class PopulateTestDataRunner implements CommandLineRunner {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private QrtokenRepository qrtokenRepository;
+
+    @Autowired
+    private SeatRepository seatRepository;
+
     @Override
     public void run(String... args) {
 
-//        employeeRepository.deleteAll();
-//        orderRepository.deleteAll();
         // edit here to fill Data in h2 at the start
-//        Employee employee = new Employee("MitarbeiterTest", "qr1234");
-//        employeeRepository.save(employee);
-//
-//        // Order(Item itemName, int amount, String seat)
-//        Booking order = new Booking(Item.BIER, 5, "A:5");
-//        order.addEmployee(employee);
-//        bookingRepository.save(order);
+        Item bier = new Item("Bier","Ein cooles Blondes Pils","Bier_pic");
+        Item cola = new Item("Cola","Coca Cola","Cola_pic");
+        Item fanta = new Item("Fanta","Fanta","Fanta_pic");
+        Item wasser = new Item("Wasser","Wasser","Wasser_pic");
+        Item sprite = new Item("Sprite","Sprite","Sprite_pic");
+        Item breezel = new Item("Breezel","Eine leckere st.p Paulianische Brääzzel","Breezel_pic");
+        itemRepository.save(bier);
+        itemRepository.save(cola);
+        itemRepository.save(fanta);
+        itemRepository.save(wasser);
+        itemRepository.save(sprite);
+        itemRepository.save(breezel);
 
-        // Set child reference(userProfile) in parent entity(user)
-        //user.setUserProfile(userProfile);
+        // create Token and Employees
+        for(int i = 0; i < 6 ; i++)
+        {
+            Qrtoken token = qrtokenRepository.save(new Qrtoken(TokenGenerator.generateToken("empl")));
+            employeeRepository.save(new Employee("Employee1",token));
+        }
 
-        // Set parent reference(user) in child entity(userProfile)
-        //userProfile.setUser(user);
-
-        // Save Parent Reference (which will save the child as well)
-        //userRepository.save(user);
+        // create Token and Seats
+        for(int i = 0; i < 21 ; i++)
+        {
+            Qrtoken token = qrtokenRepository.save(new Qrtoken(TokenGenerator.generateToken("seat")));
+            seatRepository.save(new Seat(i, token));
+        }
 
     }
 }

@@ -4,14 +4,13 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import server.domain.entities.Booking;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class TokenDTO {
-
-    @NotNull
-    private String token;
+public class BookingDTO {
+    private List<Booking> bookings;
 }

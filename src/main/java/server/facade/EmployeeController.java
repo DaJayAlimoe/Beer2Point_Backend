@@ -80,7 +80,7 @@ public class EmployeeController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public IdDTO addEmployee(@Valid @RequestBody EmployeeCreateDTO employeeCreateDTO) {
+    public IdDTO createEmployee(@Valid @RequestBody EmployeeCreateDTO employeeCreateDTO) {
         return logicalService.createEmployee(employeeCreateDTO);
     }
 }

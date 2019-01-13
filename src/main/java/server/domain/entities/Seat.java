@@ -1,14 +1,16 @@
 package server.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
+@NoArgsConstructor//(access = AccessLevel.PRIVATE)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Seat {
 
     @Id
@@ -16,10 +18,15 @@ public class Seat {
     private Long id;
 
     @ApiModelProperty(required = true)
+    @Setter(AccessLevel.PRIVATE)
     private int seatNr;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "qrtoken_id", nullable = false)
-    @Setter(AccessLevel.NONE)
     private Qrtoken qrtoken;
+
+    public Seat(int seatNr, Qrtoken qrtoken) {
+        this.seatNr = seatNr;
+        this.qrtoken = qrtoken;
+    }
 }

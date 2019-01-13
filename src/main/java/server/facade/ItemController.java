@@ -9,10 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import server.domain.dtos.ItemDTO;
 import server.domain.entities.Item;
+import server.domain.entities.Qrtoken;
 import server.domain.repositories.ItemRepository;
+import server.exceptions.TokenAuthenticationException;
 import server.service.LogicalService;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/v1/Item")
@@ -29,16 +33,14 @@ public class ItemController {
         this.logicalService = logicalService;
     }
 
-    @ApiOperation(value = "Get all Items", response = ItemDTO.class, responseContainer = "List")
+    @ApiOperation(value = "Get all Items", response = Item.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved Items"),
     })
-    @ResponseBody
-    @GetMapping(produces={"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public ItemDTO getItems(@RequestParam(value = "token") String token) {
+    @GetMapping(produces={"application/json"} )
+    public ItemDTO getItems(@RequestHeader(value = "token") String token) throws TokenAuthenticationException {
+        logicalService.isValidToken(token);
         List<Item> itemList = itemRepository.findAll();
-        String returnToken = logicalService.isValidToken(token);
-        return new ItemDTO(returnToken,itemList);
+        return new ItemDTO(itemList);
     }
 }

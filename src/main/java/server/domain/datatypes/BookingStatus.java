@@ -1,17 +1,17 @@
 package server.domain.datatypes;
 
-public enum OrderStatus {
+public enum BookingStatus {
     PREORDERED, ONTHEWAY(PREORDERED), CLOSED(ONTHEWAY);
 
-    private final OrderStatus[] previousStates;
+    private final BookingStatus[] previousStates;
 
-    OrderStatus(OrderStatus... state){
+    BookingStatus(BookingStatus... state){
         this.previousStates = state;
     }
 
 
-    public OrderStatus transition(OrderStatus newState){
-        for(OrderStatus previous : newState.previousStates){
+    public BookingStatus transition(BookingStatus newState){
+        for(BookingStatus previous : newState.previousStates){
             if(this == previous){
                 return newState;
             }

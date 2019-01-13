@@ -12,12 +12,17 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
 public class AuthEmplSeatDTO {
 
-    @NotNull
-    private String token;
-
     // can be either a seat,- or employee Object
-    private Object object;
+    private Seat seat;
+    private Employee employee;
+
+    public AuthEmplSeatDTO(Employee employee) {
+        this.employee = employee;
+    }
+
+    public AuthEmplSeatDTO(Seat seat) {
+        this.seat = seat;
+    }
 }

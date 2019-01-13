@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface QrtokenRepository extends JpaRepository<Qrtoken, Long> {
     Optional<Qrtoken> findByToken(String token);
+    Optional<Qrtoken> findById(Long tokenId);
 }
