@@ -14,6 +14,7 @@ import server.domain.datatypes.BookingStatus;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -26,8 +27,17 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Setter(AccessLevel.NONE)
+    private long eta;
+
+    @Setter(AccessLevel.NONE)
+    private Long position;
+
     @Setter(AccessLevel.PRIVATE)
-    private final Date createdOn = new Date();
+    private LocalDateTime activeAt;
+
+    @Setter(AccessLevel.PRIVATE)
+    private final LocalDateTime createdOn = LocalDateTime.now();
 
     @Setter(AccessLevel.NONE)
     private BookingStatus status = BookingStatus.PREORDERED;
@@ -41,7 +51,7 @@ public class Booking {
     private Long version;
 
     @Setter(AccessLevel.PRIVATE)
-    private Date lastUpdatedOn;
+    private LocalDateTime lastUpdatedOn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
@@ -57,20 +67,28 @@ public class Booking {
     @Setter(AccessLevel.NONE)
     private Item item;
 
-    public Booking(@Range(min = 0, max = 5)int amount, Seat seat, Item item) {
+    public Booking(@Range(min = 0, max = 5)int amount, Seat seat, Item item, long eta, long position) {
         this.amount = amount;
         this.seat = seat;
         this.item = item;
-        this.lastUpdatedOn = new Date();
+        this.eta = eta;
+        this.position = position;
+        this.activeAt = createdOn.plusMinutes(eta/3);
+        this.lastUpdatedOn = LocalDateTime.now();
     }
 
     public void updateOrderStatus(BookingStatus newStatus) {
         status = status.transition(newStatus);
-        lastUpdatedOn = new Date();
+        this.lastUpdatedOn = LocalDateTime.now();
+    }
+
+    public void updateETA(int eta) {
+        this.eta = eta;
+        this.lastUpdatedOn = LocalDateTime.now();
     }
 
     public void addEmployee(Employee newEmployee){
         this.employee = newEmployee;
-        lastUpdatedOn = new Date();
+        this.lastUpdatedOn = LocalDateTime.now();
     }
 }

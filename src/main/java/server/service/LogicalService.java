@@ -76,7 +76,6 @@ public class LogicalService {
 
     //++++++++++++++++++++++++++for Orders++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
     // update Order status
     @Transactional(rollbackFor = {BookingNotFoundException.class, BookingAlreadyConfirmedException.class,EmployeeTokenWrongException.class})
     public void confirmBooking(Long orderID, String token) throws BookingAlreadyConfirmedException, BookingNotFoundException, EmployeeTokenWrongException {
@@ -108,10 +107,12 @@ public class LogicalService {
         if (booking.getStatus() == BookingStatus.ONTHEWAY) {
             throw new BookingAlreadyOnTheWayException(orderId);
         }
-
         booking.updateOrderStatus(BookingStatus.ONTHEWAY);
         booking.addEmployee(employee);
-        return bookingRepository.save(booking);
+        booking.updateETA(5);
+        Booking updatedBooking = bookingRepository.save(booking);
+        bookingRepository.decreasePositions(BookingStatus.PREORDERED);
+        return updatedBooking;
     }
 
     @Transactional(rollbackFor = {ItemNotFoundException.class})
@@ -120,8 +121,8 @@ public class LogicalService {
         Item item = itemRepository
                 .findById(item_id)
                 .orElseThrow(() -> new ItemNotFoundException(item_id));
-
-        Booking booking = new Booking(amount, seat, item);
+        long eta = calculateETA(5);
+        Booking booking = new Booking(amount, seat, item, eta, bookingRepository.countByStatus(BookingStatus.PREORDERED)+1);
         return bookingRepository.save(booking);
     }
 
@@ -167,6 +168,12 @@ public class LogicalService {
 
         if(!optionalSeat.isPresent())
             throw new SeatTokenWrongException(token);
+    }
+
+
+    private long calculateETA(int minuteFactor) {
+        long orderPerEmployee = (bookingRepository.countByStatus(BookingStatus.PREORDERED) + 1)/employeeRepository.count();
+        return orderPerEmployee * minuteFactor;
     }
 
 }

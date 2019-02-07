@@ -23,6 +23,7 @@ import server.exceptions.*;
 import server.service.LogicalService;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -129,7 +130,7 @@ public class BookingController {
     @GetMapping(value = "/List", produces = {"application/json"})
     public BookingDTO getBookings(@RequestHeader(value = "token") String token) throws EmployeeTokenWrongException {
         logicalService.isValidEmployee(token);
-        return new BookingDTO(bookingRepository.findFirst10ByStatusOrderByCreatedOn(BookingStatus.PREORDERED));
+        return new BookingDTO(bookingRepository.findFirst10ByActiveAtGreaterThanEqualAndStatusOrderByCreatedOn(LocalDateTime.now(), BookingStatus.PREORDERED));
     }
 
 
