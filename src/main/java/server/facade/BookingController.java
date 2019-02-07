@@ -123,14 +123,14 @@ public class BookingController {
     }
 
 
-    @ApiOperation(value = "Get max. 10 Orders", response = Booking.class, responseContainer = "List")
+    @ApiOperation(value = "Get max. 20 Orders", response = Booking.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved orders"),
     })
     @GetMapping(value = "/List", produces = {"application/json"})
     public BookingDTO getBookings(@RequestHeader(value = "token") String token) throws EmployeeTokenWrongException {
         logicalService.isValidEmployee(token);
-        return new BookingDTO(bookingRepository.findFirst10ByActiveAtGreaterThanEqualAndStatusOrderByCreatedOn(LocalDateTime.now(), BookingStatus.PREORDERED));
+        return new BookingDTO(bookingRepository.findFirst20ByActiveAtGreaterThanEqualAndStatusOrderByCreatedOn(LocalDateTime.now(), BookingStatus.PREORDERED));
     }
 
 
@@ -139,9 +139,9 @@ public class BookingController {
             @ApiResponse(code = 200, message = "Successfully retrieved orders"),
     })
     @GetMapping(produces = {"application/json"})
-    public BookingDTO getMyBookings(@RequestHeader(value = "token") String token) throws EmployeeTokenWrongException {
+    public BookingDTO getMyBookings(@RequestHeader(value = "token") String token) throws SeatTokenWrongException {
 
-        logicalService.isValidEmployee(token);
+        logicalService.isValidSeat(token);
 
         return new BookingDTO(bookingRepository.findFirst30ByEmployee_QrtokenTokenOrderByCreatedOn(token));
     }

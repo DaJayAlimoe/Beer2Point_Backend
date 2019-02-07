@@ -142,7 +142,6 @@ public class LogicalService {
     }
 
 
-
     @Transactional(readOnly = true)
     public Qrtoken isValidToken(String token) throws TokenAuthenticationException {
 
