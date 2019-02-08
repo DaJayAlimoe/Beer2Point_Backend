@@ -116,11 +116,10 @@ public class BookingController {
     public BookingDTO addEmployeeToBooking(@RequestHeader(value = "token") String emplToken, @Valid @RequestBody List<TakeBookingDTO> orderList) throws EmployeeTokenWrongException, BookingNotFoundException, BookingAlreadyOnTheWayException {
 
         logicalService.isValidEmployee(emplToken);
-        ArrayList<Booking> bookingList = new ArrayList<>();
         Optional<Employee> optionalEmployee = employeeRepository.findByQrtokenToken(emplToken);
 
         for (TakeBookingDTO tb : orderList) {
-            bookingList.add(logicalService.addEmployeeToBooking(optionalEmployee.get(), tb.getBooking_id()));
+            logicalService.addEmployeeToBooking(optionalEmployee.get(), tb.getBooking_id());
         }
         return new BookingDTO(bookingRepository.findFirst20ByActiveAtIsLessThanEqualAndStatusIsOrderByCreatedOn(LocalDateTime.now(), BookingStatus.PREORDERED));
     }

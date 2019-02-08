@@ -99,7 +99,7 @@ public class LogicalService {
 
     // add employee to an order -> change status to ONTHEWAY
     @Transactional(rollbackFor = {BookingNotFoundException.class, BookingAlreadyOnTheWayException.class})
-    public Booking addEmployeeToBooking(Employee employee, Long orderId) throws BookingNotFoundException, BookingAlreadyOnTheWayException {
+    public void addEmployeeToBooking(Employee employee, Long orderId) throws BookingNotFoundException, BookingAlreadyOnTheWayException {
         Booking booking = bookingRepository
                 .findById(orderId)
                 .orElseThrow(() -> new BookingNotFoundException(orderId));
@@ -110,9 +110,8 @@ public class LogicalService {
         booking.updateOrderStatus(BookingStatus.ONTHEWAY);
         booking.addEmployee(employee);
         booking.updateETA(5);
-        Booking updatedBooking = bookingRepository.save(booking);
+        bookingRepository.save(booking);
         bookingRepository.decreasePositions(BookingStatus.PREORDERED);
-        return updatedBooking;
     }
 
     @Transactional(rollbackFor = {ItemNotFoundException.class})
