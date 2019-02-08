@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.domain.datatypes.BookingStatus;
 import server.domain.dtos.*;
@@ -18,11 +17,13 @@ import server.domain.entities.Qrtoken;
 import server.domain.entities.Seat;
 import server.domain.repositories.BookingRepository;
 import server.domain.repositories.EmployeeRepository;
+import server.domain.repositories.QrtokenRepository;
 import server.domain.repositories.SeatRepository;
 import server.exceptions.*;
 import server.service.LogicalService;
 
 import javax.validation.Valid;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,20 +131,25 @@ public class BookingController {
     @GetMapping(value = "/List", produces = {"application/json"})
     public BookingDTO getBookings(@RequestHeader(value = "token") String token) throws EmployeeTokenWrongException {
         logicalService.isValidEmployee(token);
-        return new BookingDTO(bookingRepository.findFirst20ByActiveAtGreaterThanEqualAndStatusOrderByCreatedOn(LocalDateTime.now(), BookingStatus.PREORDERED));
+        return new BookingDTO(bookingRepository.findFirst20ByActiveAtIsLessThanEqualAndStatusIsOrderByCreatedOn(LocalDateTime.now(), BookingStatus.PREORDERED));
     }
 
 
-    @ApiOperation(value = "Get order from id", response = Booking.class, responseContainer = "List")
+    @ApiOperation(value = "Get my orders", response = Booking.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved orders"),
     })
     @GetMapping(produces = {"application/json"})
-    public BookingDTO getMyBookings(@RequestHeader(value = "token") String token) throws SeatTokenWrongException {
+    public BookingDTO getMyBookings(@RequestHeader(value = "token") String token) throws TokenNotFoundException {
 
-        logicalService.isValidSeat(token);
-
-        return new BookingDTO(bookingRepository.findFirst30ByEmployee_QrtokenTokenOrderByCreatedOn(token));
+        if(logicalService.isEmployeeToken(token)){
+            return new BookingDTO(bookingRepository.findFirst30ByEmployee_QrtokenTokenOrderByCreatedOn(token));
+        }
+        else if(logicalService.isSeatToken(token)){
+            return new BookingDTO(bookingRepository.findFirst30BySeat_QrtokenTokenOrderByCreatedOn(token));
+        }else{
+            throw new TokenNotFoundException(token);
+        }
     }
 
 

@@ -169,6 +169,18 @@ public class LogicalService {
             throw new SeatTokenWrongException(token);
     }
 
+    public boolean isEmployeeToken(String token){
+        Optional<Employee> optionalEmployee = employeeRepository.findByQrtokenToken(token);
+
+        return (optionalEmployee.isPresent());
+    }
+
+    public boolean isSeatToken(String token){
+        Optional<Seat> optionalSeat = seatRepository.findByQrtokenToken(token);
+
+        return (optionalSeat.isPresent());
+    }
+
 
     private long calculateETA(int minuteFactor) {
         long orderPerEmployee = (bookingRepository.countByStatus(BookingStatus.PREORDERED) + 1)/employeeRepository.count();
