@@ -122,7 +122,7 @@ public class BookingController {
         for (TakeBookingDTO tb : orderList) {
             bookingList.add(logicalService.addEmployeeToBooking(optionalEmployee.get(), tb.getBooking_id()));
         }
-        return new BookingDTO(bookingList);
+        return new BookingDTO(bookingRepository.findFirst20ByActiveAtIsLessThanEqualAndStatusIsOrderByCreatedOn(LocalDateTime.now(), BookingStatus.PREORDERED));
     }
 
 
