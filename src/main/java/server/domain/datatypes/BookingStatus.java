@@ -1,7 +1,7 @@
 package server.domain.datatypes;
 
 public enum BookingStatus {
-    PREORDERED, ONTHEWAY(PREORDERED), CLOSED(ONTHEWAY);
+    PREORDERED, ONTHEWAY(PREORDERED), CANCELED(PREORDERED), CLOSED(ONTHEWAY);
 
     private final BookingStatus[] previousStates;
 

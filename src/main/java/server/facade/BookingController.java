@@ -72,14 +72,16 @@ public class BookingController {
             @ApiResponse(code = 200, message = "Successfully deleted order"),
             @ApiResponse(code = 404, message = "Order not found")
     })
-    @DeleteMapping
+    @PutMapping
     public void deleteBooking(@RequestHeader(value = "token") String emplToken, @PathVariable("id") Long orderId) throws BookingNotFoundException, EmployeeTokenWrongException {
         logicalService.isValidEmployee(emplToken);
-        Optional<Booking> booking = bookingRepository.findById(orderId);
+        Optional<Booking> bookingOption = bookingRepository.findById(orderId);
 
-        if (booking.isPresent())
-            bookingRepository.delete(booking.get());
-        else
+        if (bookingOption.isPresent()) {
+            Booking booking = bookingOption.get();
+            booking.updateOrderStatus(BookingStatus.CANCELED);
+            bookingRepository.save(booking);
+        } else
             throw new BookingNotFoundException(orderId);
     }
 
