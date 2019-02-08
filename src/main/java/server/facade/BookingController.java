@@ -73,7 +73,7 @@ public class BookingController {
             @ApiResponse(code = 200, message = "Successfully deleted order"),
             @ApiResponse(code = 404, message = "Order not found")
     })
-    @PutMapping
+    @PutMapping(value = "/Cancel")
     public void deleteBooking(@RequestHeader(value = "token") String token, @RequestBody String json) throws BookingNotFoundException, SeatTokenWrongException {
         logicalService.isValidSeat(token);
         JSONObject jsonBody = new JSONObject(json);
@@ -164,7 +164,7 @@ public class BookingController {
             @ApiResponse(code = 400, message = "Order was already confirmed"),
             @ApiResponse(code = 404, message = "Order is not found")
     })
-    @PutMapping(value = "/{id:[\\d]+}")
+    @PutMapping(value = "/Confirm")
     public void confirmBooking(@RequestBody String json, @RequestHeader(value = "token") String token) throws BookingNotFoundException, BookingAlreadyConfirmedException, EmployeeTokenWrongException {
         logicalService.isValidEmployee(token);
         JSONObject jsonBody = new JSONObject(json);
