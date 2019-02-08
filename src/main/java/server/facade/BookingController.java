@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -73,8 +74,10 @@ public class BookingController {
             @ApiResponse(code = 404, message = "Order not found")
     })
     @PutMapping
-    public void deleteBooking(@RequestHeader(value = "token") String emplToken, @PathVariable("id") Long orderId) throws BookingNotFoundException, EmployeeTokenWrongException {
+    public void deleteBooking(@RequestHeader(value = "token") String emplToken, @RequestBody String json) throws BookingNotFoundException, EmployeeTokenWrongException {
         logicalService.isValidEmployee(emplToken);
+        JSONObject jsonBody = new JSONObject(json);
+        Long orderId = jsonBody.getLong("id");
         Optional<Booking> bookingOption = bookingRepository.findById(orderId);
 
         if (bookingOption.isPresent()) {
@@ -162,7 +165,10 @@ public class BookingController {
             @ApiResponse(code = 404, message = "Order is not found")
     })
     @PutMapping(value = "/{id:[\\d]+}")
-    public void confirmBooking(@PathVariable("id") Long orderID, @RequestHeader(value = "token") String token) throws BookingNotFoundException, BookingAlreadyConfirmedException, EmployeeTokenWrongException {
-        logicalService.confirmBooking(orderID, token);
+    public void confirmBooking(@RequestBody String json, @RequestHeader(value = "token") String token) throws BookingNotFoundException, BookingAlreadyConfirmedException, EmployeeTokenWrongException {
+        logicalService.isValidEmployee(token);
+        JSONObject jsonBody = new JSONObject(json);
+        Long orderId = jsonBody.getLong("id");
+        logicalService.confirmBooking(orderId, token);
     }
 }
