@@ -74,8 +74,8 @@ public class BookingController {
             @ApiResponse(code = 404, message = "Order not found")
     })
     @PutMapping
-    public void deleteBooking(@RequestHeader(value = "token") String emplToken, @RequestBody String json) throws BookingNotFoundException, EmployeeTokenWrongException {
-        logicalService.isValidEmployee(emplToken);
+    public void deleteBooking(@RequestHeader(value = "token") String token, @RequestBody String json) throws BookingNotFoundException, SeatTokenWrongException {
+        logicalService.isValidSeat(token);
         JSONObject jsonBody = new JSONObject(json);
         Long orderId = jsonBody.getLong("id");
         Optional<Booking> bookingOption = bookingRepository.findById(orderId);
