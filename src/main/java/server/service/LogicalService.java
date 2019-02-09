@@ -77,19 +77,14 @@ public class LogicalService {
     //++++++++++++++++++++++++++for Orders++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // update Order status
-    @Transactional(rollbackFor = {BookingNotFoundException.class, BookingAlreadyConfirmedException.class,EmployeeTokenWrongException.class})
-    public void confirmBooking(Long orderID, String token) throws BookingAlreadyConfirmedException, BookingNotFoundException, EmployeeTokenWrongException {
-
-        Optional<Booking> optionalBooking = bookingRepository.findByEmployee_QrtokenToken(token);
-
-        if(!optionalBooking.isPresent())
-            throw new EmployeeTokenWrongException(token);
+    @Transactional(rollbackFor = {BookingNotFoundException.class, BookingAlreadyConfirmedException.class})
+    public void confirmBooking(Long orderID, String token) throws BookingAlreadyConfirmedException, BookingNotFoundException {
 
         Booking booking = bookingRepository
                 .findById(orderID)
                 .orElseThrow(() -> new BookingNotFoundException(orderID));
 
-        if (booking.getStatus() == BookingStatus.CLOSED) {
+        if (booking.getStatus() == BookingStatus.CLOSED || booking.getStatus() == BookingStatus.CANCELED) {
             throw new BookingAlreadyConfirmedException(orderID);
         }
 
