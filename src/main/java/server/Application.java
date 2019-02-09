@@ -1,5 +1,7 @@
 package server;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -79,6 +81,8 @@ class PopulateTestDataRunner implements CommandLineRunner {
     @Autowired
     private SeatRepository seatRepository;
 
+    private final Log log = LogFactory.getLog(getClass());
+
     @Override
     public void run(String... args) {
 
@@ -97,18 +101,66 @@ class PopulateTestDataRunner implements CommandLineRunner {
         itemRepository.save(breezel);
 
         // create Token and Employees
-        for(int i = 0; i < 6 ; i++)
-        {
-            Qrtoken token = qrtokenRepository.save(new Qrtoken(TokenGenerator.generateToken("empl")));
-            employeeRepository.save(new Employee("Employee1",token));
-        }
+//        for(int i = 0; i < 6 ; i++)
+//        {
+            // TokenGenerator.generateToken("empl")
+        Qrtoken token1 = qrtokenRepository.save(new Qrtoken("empl:7d3248f91c93cfa"));
+        Qrtoken token2 = qrtokenRepository.save(new Qrtoken("empl:5b12d7270585b999"));
+        Qrtoken token3 = qrtokenRepository.save(new Qrtoken("empl:33c842d5fc68b17e"));
+        Qrtoken token4 = qrtokenRepository.save(new Qrtoken("empl:59d3baa7c0f0aa3"));
+        Qrtoken token5 = qrtokenRepository.save(new Qrtoken("empl:2d6daf315cf8cc63"));
+        Qrtoken token6 = qrtokenRepository.save(new Qrtoken("empl:4c2f6419544aaa86"));
+        employeeRepository.save(new Employee("Employee1",token1));
+        employeeRepository.save(new Employee("Employee2",token2));
+        employeeRepository.save(new Employee("Employee3",token3));
+        employeeRepository.save(new Employee("Employee4",token4));
+        employeeRepository.save(new Employee("Employee5",token5));
+        employeeRepository.save(new Employee("Employee6",token6));
+//        }
 
         // create Token and Seats
-        for(int i = 0; i < 21 ; i++)
-        {
-            Qrtoken token = qrtokenRepository.save(new Qrtoken(TokenGenerator.generateToken("seat")));
-            seatRepository.save(new Seat(i, token));
-        }
+        // TokenGenerator.generateToken("seat")
+        Qrtoken stoken0 = qrtokenRepository.save(new Qrtoken("seat:4842f5964017ee57"));
+        Qrtoken stoken1 = qrtokenRepository.save(new Qrtoken("seat:998e0d4351dcecc"));
+        Qrtoken stoken2 = qrtokenRepository.save(new Qrtoken("seat:2b2fbcb116406b75"));
+        Qrtoken stoken3 = qrtokenRepository.save(new Qrtoken("seat:4c2586da593c62ce"));
+        Qrtoken stoken4 = qrtokenRepository.save(new Qrtoken("seat:539ac94fbfcf287e"));
+        Qrtoken stoken5 = qrtokenRepository.save(new Qrtoken("seat:18c736f1ad13229b"));
+        Qrtoken stoken6 = qrtokenRepository.save(new Qrtoken("seat:4b02a31d8d4ea072"));
+        Qrtoken stoken7 = qrtokenRepository.save(new Qrtoken("seat:1aeea2c206f21a54"));
+        Qrtoken stoken8 = qrtokenRepository.save(new Qrtoken("seat:2d4d9c2648ed7bef"));
+        Qrtoken stoken9 = qrtokenRepository.save(new Qrtoken("seat:384256f39c4bf6f7"));
+        Qrtoken stoken10 = qrtokenRepository.save(new Qrtoken("seat:6cf1730c7efee5ec"));
+        Qrtoken stoken11 = qrtokenRepository.save(new Qrtoken("seat:a9279194e6c8476"));
+        Qrtoken stoken12 = qrtokenRepository.save(new Qrtoken("seat:1d41ca17a3d784ba"));
+        Qrtoken stoken13 = qrtokenRepository.save(new Qrtoken("seat:5a7d5a78529eaebd"));
+        Qrtoken stoken14 = qrtokenRepository.save(new Qrtoken("seat:3c885a5b73ec80da"));
+
+        Qrtoken stoken15 = qrtokenRepository.save(new Qrtoken("seat:88e274d02fb4dfa"));
+        Qrtoken stoken16 = qrtokenRepository.save(new Qrtoken("seat:3313777464d7393a"));
+        Qrtoken stoken17 = qrtokenRepository.save(new Qrtoken("seat:2172020438e8eaba"));
+        Qrtoken stoken18 = qrtokenRepository.save(new Qrtoken("seat:73b7071d212319d4"));
+        Qrtoken stoken19 = qrtokenRepository.save(new Qrtoken("seat:76b7ef2044e08f62"));
+        seatRepository.save(new Seat(0, stoken0));
+        seatRepository.save(new Seat(1, stoken1));
+        seatRepository.save(new Seat(2, stoken2));
+        seatRepository.save(new Seat(3, stoken3));
+        seatRepository.save(new Seat(4, stoken4));
+        seatRepository.save(new Seat(5, stoken5));
+        seatRepository.save(new Seat(6, stoken6));
+        seatRepository.save(new Seat(7, stoken7));
+        seatRepository.save(new Seat(8, stoken8));
+        seatRepository.save(new Seat(9, stoken9));
+        seatRepository.save(new Seat(10, stoken10));
+        seatRepository.save(new Seat(11, stoken11));
+        seatRepository.save(new Seat(12, stoken12));
+        seatRepository.save(new Seat(13, stoken13));
+        seatRepository.save(new Seat(14, stoken14));
+        seatRepository.save(new Seat(15, stoken15));
+        seatRepository.save(new Seat(16, stoken16));
+        seatRepository.save(new Seat(17, stoken17));
+        seatRepository.save(new Seat(18, stoken18));
+        seatRepository.save(new Seat(19, stoken19));
 
     }
 }
