@@ -11,8 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import server.domain.datatypes.TokenGenerator;
-import server.domain.dtos.BookingCreateDTO;
 import server.domain.entities.*;
 import server.domain.repositories.*;
 import springfox.documentation.builders.PathSelectors;
@@ -87,12 +85,12 @@ class PopulateTestDataRunner implements CommandLineRunner {
     public void run(String... args) {
 
         // edit here to fill Data in h2 at the start
-        Item bier = new Item("Bier","Ein cooles Blondes Pils","Bier_pic");
-        Item cola = new Item("Cola","Coca Cola","Cola_pic");
-        Item fanta = new Item("Fanta","Fanta","Fanta_pic");
-        Item wasser = new Item("Wasser","Wasser","Wasser_pic");
-        Item sprite = new Item("Sprite","Sprite","Sprite_pic");
-        Item breezel = new Item("Breezel","Eine leckere st.p Paulianische Brääzzel","Breezel_pic");
+        Item bier = new Item("Bier","Ein cooles Blondes Pils");
+        Item cola = new Item("Cola","Coca Cola");
+        Item fanta = new Item("Fanta","Fanta");
+        Item wasser = new Item("Wasser","Wasser");
+        Item sprite = new Item("Sprite","Sprite");
+        Item breezel = new Item("Breezel","Eine leckere st.p Paulianische Brääzzel");
         itemRepository.save(bier);
         itemRepository.save(cola);
         itemRepository.save(fanta);

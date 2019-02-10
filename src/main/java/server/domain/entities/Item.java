@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Data
@@ -27,13 +26,8 @@ public class Item{
     @Setter(AccessLevel.NONE)
     private String description;
 
-    @ApiModelProperty(required = true)
-    @Setter(AccessLevel.NONE)
-    private String pic_url;
-
-    public Item(String name, String description, String pic_url) {
+    public Item(String name, String description) {
         this.name = name;
         this.description = description;
-        this.pic_url = pic_url;
     }
 }
