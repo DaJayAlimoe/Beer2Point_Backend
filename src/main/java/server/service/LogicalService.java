@@ -19,6 +19,8 @@ import java.util.Optional;
 @Service
 public class LogicalService {
 
+    private final int minuteFactor = 5;
+
     private final EmployeeRepository employeeRepository;
 
     private final BookingRepository bookingRepository;
@@ -104,9 +106,9 @@ public class LogicalService {
         }
         booking.updateOrderStatus(BookingStatus.ONTHEWAY);
         booking.addEmployee(employee);
-        booking.updateETA(5);
+        booking.updateETA(this.minuteFactor);
         bookingRepository.save(booking);
-        bookingRepository.decreasePositions(BookingStatus.PREORDERED);
+        this.updateAllOrders(bookingRepository.findAllByStatus(BookingStatus.PREORDERED), this.minuteFactor);
     }
 
     @Transactional(rollbackFor = {ItemNotFoundException.class})
@@ -115,7 +117,7 @@ public class LogicalService {
         Item item = itemRepository
                 .findById(item_id)
                 .orElseThrow(() -> new ItemNotFoundException(item_id));
-        long eta = calculateETA(5);
+        long eta = calculateETA(this.minuteFactor);
         Booking booking = new Booking(amount, seat, item, eta, bookingRepository.countByStatus(BookingStatus.PREORDERED)+1);
         return bookingRepository.save(booking);
     }
@@ -175,6 +177,16 @@ public class LogicalService {
         return (optionalSeat.isPresent());
     }
 
+    private int updateAllOrders(List<Booking> preordered, int minuteFactor) {
+        Long employeeCount = employeeRepository.count();
+        for (Booking order : preordered) {
+            Long position = order.getPosition() -1;
+            order.updateETA(position);
+            order.updateETA((position/employeeCount) * minuteFactor);
+            bookingRepository.save(order);
+        }
+        return preordered.size();
+    }
 
     private long calculateETA(int minuteFactor) {
         long orderPerEmployee = (bookingRepository.countByStatus(BookingStatus.PREORDERED) + 1)/employeeRepository.count();

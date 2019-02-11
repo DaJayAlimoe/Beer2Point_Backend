@@ -21,9 +21,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     List<Booking> findFirst30ByEmployee_QrtokenTokenOrderByCreatedOn(String token);
     List<Booking> findFirst30BySeat_QrtokenTokenOrderByCreatedOn(String token);
     List<Booking> findFirst20ByActiveAtIsLessThanEqualAndStatusIsOrderByCreatedOn(LocalDateTime currentDT, BookingStatus status);
-
-    @Modifying
-    @Query("UPDATE Booking b SET b.position = b.position - 1 WHERE b.status = :status")
-    int decreasePositions(@Param("status") BookingStatus status);
+    List<Booking> findAllByStatus(BookingStatus status);
     long countByStatus(BookingStatus status);
 }

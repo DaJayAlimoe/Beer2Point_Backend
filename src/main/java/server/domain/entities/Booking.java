@@ -82,8 +82,14 @@ public class Booking {
         this.lastUpdatedOn = LocalDateTime.now();
     }
 
-    public void updateETA(int eta) {
+    public void updateETA(long eta) {
         this.eta = eta;
+        this.activeAt = createdOn.plusMinutes(eta/3);
+        this.lastUpdatedOn = LocalDateTime.now();
+    }
+
+    public void updatePosition(long position) {
+        this.position = position;
         this.lastUpdatedOn = LocalDateTime.now();
     }
 
