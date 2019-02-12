@@ -181,7 +181,7 @@ public class LogicalService {
         Long employeeCount = employeeRepository.count();
         for (Booking order : preordered) {
             Long position = order.getPosition() -1;
-            order.updateETA(position);
+            order.updatePosition(position);
             order.updateETA((position/employeeCount) * minuteFactor);
             bookingRepository.save(order);
         }
