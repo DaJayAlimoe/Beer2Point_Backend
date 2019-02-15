@@ -9,6 +9,7 @@ import server.domain.datatypes.BookingStatus;
 import server.domain.entities.Booking;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +19,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     List<Booking> findOrdersByEmployee(Long employeeId);
     List<Booking> findFirst10ByStatusOrderByCreatedOn(BookingStatus status);
     Optional<Booking> findByEmployee_QrtokenToken(String token);
-    List<Booking> findByEmployee_QrtokenTokenOrderByCreatedOn(String token);
-    List<Booking> findBySeat_QrtokenTokenOrderByCreatedOn(String token);
+    List<Booking> findByEmployee_QrtokenTokenAndStatusNotInOrderByCreatedOn(String token, ArrayList<BookingStatus> status);
+    List<Booking> findBySeat_QrtokenTokenAndStatusNotInOrderByCreatedOn(String token, ArrayList<BookingStatus> status);
     List<Booking> findFirst20ByActiveAtIsLessThanEqualAndStatusIsOrderByCreatedOn(LocalDateTime currentDT, BookingStatus status);
     List<Booking> findAllByStatus(BookingStatus status);
     long countByStatus(BookingStatus status);
