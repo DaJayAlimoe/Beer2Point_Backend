@@ -147,11 +147,11 @@ public class BookingController {
     public BookingDTO getMyBookings(@RequestHeader(value = "token") String token) throws TokenNotFoundException {
 
         if(logicalService.isEmployeeToken(token)){
-            return new BookingDTO(bookingRepository.findFirst30ByEmployee_QrtokenTokenOrderByCreatedOn(token));
+            return new BookingDTO(bookingRepository.findByEmployee_QrtokenTokenOrderByCreatedOn(token));
         }
         else if(logicalService.isSeatToken(token)){
 //            seatRepository.findByQrtokenToken(token).get()
-            return new BookingDTO(bookingRepository.findFirst30BySeat_QrtokenTokenOrderByCreatedOn(token));
+            return new BookingDTO(bookingRepository.findBySeat_QrtokenTokenOrderByCreatedOn(token));
         }else{
             throw new TokenNotFoundException(token);
         }

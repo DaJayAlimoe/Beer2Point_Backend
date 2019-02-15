@@ -18,8 +18,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Booking
     List<Booking> findOrdersByEmployee(Long employeeId);
     List<Booking> findFirst10ByStatusOrderByCreatedOn(BookingStatus status);
     Optional<Booking> findByEmployee_QrtokenToken(String token);
-    List<Booking> findFirst30ByEmployee_QrtokenTokenOrderByCreatedOn(String token);
-    List<Booking> findFirst30BySeat_QrtokenTokenOrderByCreatedOn(String token);
+    List<Booking> findByEmployee_QrtokenTokenOrderByCreatedOn(String token);
+    List<Booking> findBySeat_QrtokenTokenOrderByCreatedOn(String token);
     List<Booking> findFirst20ByActiveAtIsLessThanEqualAndStatusIsOrderByCreatedOn(LocalDateTime currentDT, BookingStatus status);
     List<Booking> findAllByStatus(BookingStatus status);
     long countByStatus(BookingStatus status);
