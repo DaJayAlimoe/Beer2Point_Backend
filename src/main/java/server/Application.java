@@ -86,12 +86,16 @@ class PopulateTestDataRunner implements CommandLineRunner {
 
         // edit here to fill Data in h2 at the start
         Item bier = new Item("Bier","Ein cooles Blondes Pils");
-        Item cola = new Item("Cola","Coca Cola");
-        Item fanta = new Item("Fanta","Fanta");
-        Item wasser = new Item("Wasser","Wasser");
-        Item sprite = new Item("Sprite","Sprite");
-        Item breezel = new Item("Breezel","Eine leckere st.p Paulianische Brääzzel");
+        Item cola = new Item("Coca Cola","Kohlensäurehaltiges Wasser, Zucker, Farbe (Caramel E150d), Phosphorsäure, natürliche Aromen einschließlich Koffein.");
+        Item fanta = new Item("Fanta","Kohlensäurehaltiges Wasser, Zucker, Orangensaft aus Konzentrat (3,7%), Zitrusfrucht aus Konzentrat (1,3%), Zitronensäure, Pflanzenextrakte (Karotte, Kürbis), Süßstoffe, Konservierungsmittel, Apfelsäure , Säureregulator, Stabilisator, natürliche Orangenaromen mit anderen natürlichen Aromen, Antioxidationsmittel.");
+        Item wasser = new Item("Lautes Wasser","Kohlensäurehaltiges Wasser");
+        Item stillWasser = new Item("Leises Wasser"," Stilles Wasser");
+        Item sprite = new Item("Sprite","Kohlensäurehaltiges Wasser, Zucker, Zitronensäure, Süßungsmittel, Säureregulator , natürliche Zitronen- und Limettenaromen");
+        Item breezel = new Item("Breezel","Eine leckere St.Paulianische Brääzzel");
+        Item popcorn = new Item("Popcorn" , "Zucker , Mais, Butter");
         itemRepository.save(bier);
+        itemRepository.save(stillWasser);
+        itemRepository.save(popcorn);
         itemRepository.save(cola);
         itemRepository.save(fanta);
         itemRepository.save(wasser);
