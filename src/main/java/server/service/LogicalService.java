@@ -101,14 +101,16 @@ public class LogicalService {
                 .findById(orderId)
                 .orElseThrow(() -> new BookingNotFoundException(orderId));
 
-        if (booking.getStatus() == BookingStatus.ONTHEWAY) {
+        if (booking.getStatus() == BookingStatus.PREORDERED) {
+            booking.updateOrderStatus(BookingStatus.ONTHEWAY);
+            booking.addEmployee(employee);
+            booking.updateETA(this.minuteFactor);
+            bookingRepository.save(booking);
+            this.updateAllOrders(bookingRepository.findAllByStatus(BookingStatus.PREORDERED), this.minuteFactor);
+        } else {
             throw new BookingAlreadyOnTheWayException(orderId);
         }
-        booking.updateOrderStatus(BookingStatus.ONTHEWAY);
-        booking.addEmployee(employee);
-        booking.updateETA(this.minuteFactor);
-        bookingRepository.save(booking);
-        this.updateAllOrders(bookingRepository.findAllByStatus(BookingStatus.PREORDERED), this.minuteFactor);
+
     }
 
     @Transactional(rollbackFor = {ItemNotFoundException.class})

@@ -87,7 +87,7 @@ class PopulateTestDataRunner implements CommandLineRunner {
         // edit here to fill Data in h2 at the start
         Item bier = new Item("Bier","Ein cooles Blondes Pils");
         Item cola = new Item("Coca Cola","Kohlensäurehaltiges Wasser, Zucker, Farbe (Caramel E150d), Phosphorsäure, natürliche Aromen einschließlich Koffein.");
-        Item fanta = new Item("Fanta","Kohlensäurehaltiges Wasser, Zucker, Orangensaft aus Konzentrat (3,7%), Zitrusfrucht aus Konzentrat (1,3%), Zitronensäure, Pflanzenextrakte (Karotte, Kürbis), Süßstoffe, Konservierungsmittel, Apfelsäure , Säureregulator, Stabilisator, natürliche Orangenaromen mit anderen natürlichen Aromen, Antioxidationsmittel.");
+        Item fanta = new Item("Fanta","Kohlensäurehaltiges Wasser, Zucker, Orangensaft aus Konzentrat (3,7%), Zitrusfrucht aus Konzentrat (1,3%), Zitronensäure.");
         Item wasser = new Item("Lautes Wasser","Kohlensäurehaltiges Wasser");
         Item stillWasser = new Item("Leises Wasser"," Stilles Wasser");
         Item sprite = new Item("Sprite","Kohlensäurehaltiges Wasser, Zucker, Zitronensäure, Süßungsmittel, Säureregulator , natürliche Zitronen- und Limettenaromen");

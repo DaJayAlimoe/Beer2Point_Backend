@@ -150,6 +150,7 @@ public class BookingController {
             return new BookingDTO(bookingRepository.findFirst30ByEmployee_QrtokenTokenOrderByCreatedOn(token));
         }
         else if(logicalService.isSeatToken(token)){
+//            seatRepository.findByQrtokenToken(token).get()
             return new BookingDTO(bookingRepository.findFirst30BySeat_QrtokenTokenOrderByCreatedOn(token));
         }else{
             throw new TokenNotFoundException(token);

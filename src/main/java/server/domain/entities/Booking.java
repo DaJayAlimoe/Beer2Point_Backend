@@ -53,16 +53,16 @@ public class Booking {
     @Setter(AccessLevel.PRIVATE)
     private LocalDateTime lastUpdatedOn;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "seat_id", nullable = false)
     @Setter(AccessLevel.NONE)
     private Seat seat;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "item_id", nullable = false)
     @Setter(AccessLevel.NONE)
     private Item item;
