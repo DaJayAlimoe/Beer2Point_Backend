@@ -88,9 +88,9 @@ dependencies {
 //    compile 'org.springframework.boot:spring-boot-starter-jdbc:*'
 //    compile 'org.postgresql:postgresql:*'
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
-//    compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1201-jdbc41'
+    compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1201-jdbc41'
 // https://mvnrepository.com/artifact/org.postgresql/postgresql
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+//    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
 
 
     // dependencies for test-execution
