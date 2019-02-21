@@ -61,7 +61,7 @@ public class Application implements HealthIndicator {
 
 // local profile for inMemory Database
 @Component
-@Profile("local")
+@Profile("production")
 class PopulateTestDataRunner implements CommandLineRunner {
 
     @Autowired
