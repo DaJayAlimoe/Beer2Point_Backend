@@ -6,9 +6,9 @@ spring:
   profiles:
     active: production # default profile
 
-#---
-#server:
-#  port: 443
+---
+server:
+  port: 8080
 ---
 
 spring:
