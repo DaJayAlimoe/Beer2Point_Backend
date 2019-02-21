@@ -84,6 +84,14 @@ dependencies {
     runtime 'org.springframework.boot:spring-boot-devtools'
     runtime 'com.h2database:h2'
     runtime 'mysql:mysql-connector-java'
+    // for postgreeSQL
+//    compile 'org.springframework.boot:spring-boot-starter-jdbc:*'
+//    compile 'org.postgresql:postgresql:*'
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+//    compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1201-jdbc41'
+// https://mvnrepository.com/artifact/org.postgresql/postgresql
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+
 
     // dependencies for test-execution
     testCompile 'org.assertj:assertj-core:3.10.0'
