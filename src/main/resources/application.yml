@@ -4,39 +4,13 @@ logging:
 ---
 spring:
   profiles:
-    active: local # default profile for H2 DB
----
-server:
-  port: 443
----
-##spring:
-##  rabbitmq:
-##    host: localhost
-##    port: 5672
-##    username: guest
-##    password: guest
-##    virtual-host: /
-##  cloud:
-##    stream:
-##      bindings:
-##        fromPortcheckinservice:
-##          destination: portcheckinservice-events
-##          group: bookingservice
-##          consumer:
-##            maxAttempts: 3
-##        bookingserviceOutput:
-##          destination: bookingservice-events
-##      rabbit:
-##        bindings:
-##          fromPortcheckinservice:
-##            consumer:
-##              acknowledgeMode: AUTO
-##              autoBindDlq: true
-##              republish-to-dlq: true
-##          bookingserviceOutput:
-##            producer:
-##              transacted: true
+    active: production # default profile
+
 #---
+#server:
+#  port: 443
+---
+
 spring:
   profiles: production
   jpa:

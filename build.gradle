@@ -39,16 +39,6 @@ group = "${gradle.projectGroup}"
 //version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 10
 
-//def checkPropertyExists(String property) {
-//    if (!project.hasProperty(property)) {
-//        throw new GradleException("Property '" + property + "' does not exist. Please check your gradle.properties-file.")
-//    }
-//}
-//["mavenRepositoryUsername","mavenRepositoryPassword","mavenSnapshotsRepositoryUrl","mavenReleasesRepositoryUrl",
-// "sonarqubeHost","sonarqubeLogin","consumerDrivenContractTestingEnabled"].each {
-//    checkPropertyExists(it)
-//}
-
 println "-------------------------------------------------------------"
 println "Project   : ${name}"
 println "Group     : ${group}"
@@ -93,7 +83,7 @@ dependencies {
     // runtime dependencies
     runtime 'org.springframework.boot:spring-boot-devtools'
     runtime 'com.h2database:h2'
-//    runtime 'mysql:mysql-connector-java'
+    runtime 'mysql:mysql-connector-java'
 
     // dependencies for test-execution
     testCompile 'org.assertj:assertj-core:3.10.0'
