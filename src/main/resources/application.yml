@@ -1,10 +1,10 @@
-logging:
-  level:
-    org.springframework.boot.devtools: WARN # other values: LOG, ....
----
-spring:
-  profiles:
-    active: production # default profile
+#logging:
+#  level:
+#    org.springframework.boot.devtools: WARN # other values: LOG, ....
+#---
+#spring:
+#  profiles:
+#    active: production # default profile
 
 #---
 #server:

@@ -26,6 +26,18 @@ plugins {
     id 'maven-publish'
 }
 
+plugins {
+    id 'java'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'server.Application'
+        )
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
