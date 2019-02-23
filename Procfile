@@ -1,1 +1,1 @@
-web: java -jar target/build/libs/beer2point_backend-0.0.1-SNAPSHOT-stubs.jar
+java -Dserver.port=$PORT $JAVA_OPTS -jar target/*.jar
