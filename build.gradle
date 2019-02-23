@@ -87,7 +87,7 @@ dependencies {
     runtime 'mysql:mysql-connector-java'
     // for postgreeSQL
 //    compile 'org.springframework.boot:spring-boot-starter-jdbc:*'
-//    compile 'org.postgresql:postgresql:*'
+    compile 'org.postgresql:postgresql:*'
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1201-jdbc41'
 // https://mvnrepository.com/artifact/org.postgresql/postgresql

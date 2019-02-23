@@ -1,0 +1,1 @@
+web: java -jar target/beer2point_backend-0.1.0-SNAPSHOT.jar
