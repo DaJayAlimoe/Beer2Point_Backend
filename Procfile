@@ -1,1 +1,1 @@
-web: java -jar target/beer2point_backend-0.1.0-SNAPSHOT.jar
+web: java -jar target/build/libs/beer2point_backend-0.0.1-SNAPSHOT-stubs.jar
