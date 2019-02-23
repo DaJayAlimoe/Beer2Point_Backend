@@ -37,27 +37,27 @@ public class Application implements HealthIndicator {
         return Health.up().build();
     }
 
-//    @Bean
-//    public Docket api() {
-//        return new Docket(DocumentationType.SWAGGER_2)
-//                .select()
-//                .apis(RequestHandlerSelectors.basePackage("server"))
-//                .paths(PathSelectors.any())
-//                .build()
-//                .apiInfo(apiInfo())
-//                .useDefaultResponseMessages(false);
-//    }
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("server"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(apiInfo())
+                .useDefaultResponseMessages(false);
+    }
 
-//    private ApiInfo apiInfo() {
-//        return new ApiInfo(
-//                "HCI-Service-Server REST API",
-//                "REST API for St.Pauli in cooperation with @ HAW-Hamburg",
-//                "API v1",
-//                "Terms of service",
-//                new Contact("Hendrik Scheve", "no-Url",
-//                        "hendrik.scheve@haw-hamburg.de"),
-//                "MIT License", "https://opensource.org/licenses/MIT", Collections.emptyList());
-//    }
+    private ApiInfo apiInfo() {
+        return new ApiInfo(
+                "HCI-Service-Server REST API",
+                "REST API for St.Pauli in cooperation with @ HAW-Hamburg",
+                "API v1",
+                "Terms of service",
+                new Contact("Hendrik Scheve", "no-Url",
+                        "hendrik.scheve@haw-hamburg.de"),
+                "MIT License", "https://opensource.org/licenses/MIT", Collections.emptyList());
+    }
 }
 
 //// local profile for inMemory Database
