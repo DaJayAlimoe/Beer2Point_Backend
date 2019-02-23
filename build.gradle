@@ -37,7 +37,7 @@ apply plugin: 'jacoco'
 group = "${gradle.projectGroup}"
 // version info is set by versioning plugin depending on your git tags,
 // see https://plugins.gradle.org/plugin/com.cinnober.gradle.semver-git
-//version = '0.0.1-SNAPSHOT'
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 10
 
 println "-------------------------------------------------------------"
